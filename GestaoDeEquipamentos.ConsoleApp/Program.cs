@@ -26,6 +26,10 @@ class Program
                 case '3':
                     telaEquipamento.EditarRegistro();
                     break;
+
+                case '4':
+                    telaEquipamento.ExcluirRegistro();
+                    break;
             }
         }
     }
@@ -50,6 +54,7 @@ public class TelaEquipamento
         Console.WriteLine("1 - Cadastro de Equipamento");
         Console.WriteLine("2 - Visualizar Equipamentos");
         Console.WriteLine("3 - Editar Equipamentos");
+        Console.WriteLine("4 - Excluir Equipamentos");
         Console.WriteLine("S - Sair");
 
         Console.WriteLine();
@@ -118,7 +123,7 @@ public class TelaEquipamento
 
         VisualizarRegistros(false);
 
-        Console.Write("Digite o id do registro que deseja selecionar:");
+        Console.Write("Digite o id do registro que deseja selecionar: ");
         int idSelecionado = Convert.ToInt32(Console.ReadLine());
 
         Console.WriteLine();
@@ -149,8 +154,40 @@ public class TelaEquipamento
         equipamentoSelecionado.fabricante = equipamentoAtualizado.fabricante;
         equipamentoSelecionado.dataFabricacao = equipamentoAtualizado.dataFabricacao;
 
-
         Console.WriteLine($"\nEquipamento \"{equipamentoSelecionado.nome}\" editado com sucesso!");
+        Console.ReadLine();
+    }
+
+    public void ExcluirRegistro()
+    {
+        ExibirCabecalho();
+
+        Console.WriteLine("Exclusão de Equipamentos");
+
+        Console.WriteLine();
+
+        VisualizarRegistros(false);
+
+        Console.Write("Digite o id do registro que deseja selecionar: ");
+        int idSelecionado = Convert.ToInt32(Console.ReadLine());
+
+        Console.WriteLine();
+
+        Equipamento[] equipamentos = repositorioEquipamento.equipamentos;
+
+        for (int i = 0; i < equipamentos.Length; i++)
+        {
+            if (equipamentos[i] == null)
+                continue;
+
+            if (equipamentos[i].id == idSelecionado)
+            {
+                equipamentos[i] = null;
+                break;
+            }
+        }
+
+        Console.WriteLine($"\nEquipamento excluído com sucesso!");
         Console.ReadLine();
     }
 
