@@ -1,204 +1,202 @@
-﻿using GestaoDeEquipamentos.ConsoleApp.ModuloFabricante;
+﻿using GestaoDeEquipamentos.ConsoleApp.Compartilhado;
+using GestaoDeEquipamentos.ConsoleApp.ModuloFabricante;
 
 namespace GestaoDeEquipamentos.ConsoleApp.ModuloEquipamento;
 
 public class TelaEquipamento
 {
-    public RepositorioEquipamento repositorioEquipamento;
-    public RepositorioFabricante repositorioFabricante;
+	public RepositorioEquipamento repositorioEquipamento;
+	public RepositorioFabricante repositorioFabricante;
 
-    public void ExibirCabecalho()
-    {
-        Console.Clear();
-        Console.WriteLine("Gestão de Equipamentos");
-        Console.WriteLine();
-    }
+	public void ExibirCabecalho()
+	{
+		Console.Clear();
+		Console.WriteLine("Gestão de Equipamentos");
+		Console.WriteLine();
+	}
 
-    public char ApresentarMenu()
-    {
-        ExibirCabecalho();
+	public char ApresentarMenu()
+	{
+		ExibirCabecalho();
 
-        Console.WriteLine("1 - Cadastro de Equipamento");
-        Console.WriteLine("2 - Visualizar Equipamentos");
-        Console.WriteLine("3 - Editar Equipamentos");
-        Console.WriteLine("4 - Excluir Equipamentos");
-        Console.WriteLine("S - Sair");
+		Console.WriteLine("1 - Cadastro de Equipamento");
+		Console.WriteLine("2 - Visualizar Equipamentos");
+		Console.WriteLine("3 - Editar Equipamentos");
+		Console.WriteLine("4 - Excluir Equipamentos");
+		Console.WriteLine("S - Sair");
+		Console.WriteLine();
 
-        Console.WriteLine();
+		Console.Write("Digite uma opção válida: ");
+		char opcaoEscolhida = Console.ReadLine().ToUpper()[0];
 
-        Console.Write("Digite uma opção válida: ");
-        char opcaoEscolhida = Console.ReadLine().ToUpper()[0];
+		return opcaoEscolhida;
+	}
 
-        return opcaoEscolhida;
-    }
+	public void CadastrarRegistro()
+	{
+		ExibirCabecalho();
 
-    public void CadastrarRegistro()
-    {
-        ExibirCabecalho();
+		Console.WriteLine("Cadastro de Equipamentos");
+		Console.WriteLine();
 
-        Console.WriteLine("Cadastro de Equipamentos");
+		Equipamento equipamento = ObterDados();
 
-        Console.WriteLine();
+		repositorioEquipamento.CadastrarRegistro(equipamento);
 
-        Equipamento equipamento = ObterDados();
+		Console.WriteLine($"\nEquipamento \"{equipamento.nome}\" cadastrado com sucesso!");
+		Console.ReadLine();
+	}
 
-        repositorioEquipamento.CadastrarEquipamento(equipamento);
+	public void EditarRegistro()
+	{
+		ExibirCabecalho();
 
-        Console.WriteLine($"\nEquipamento \"{equipamento.nome}\" cadastrado com sucesso!");
-        Console.ReadLine();
-    }
+		Console.WriteLine("Edição de Equipamentos");
+		Console.WriteLine();
 
-    public void EditarRegistro()
-    {
-        ExibirCabecalho();
+		VisualizarRegistros(false);
 
-        Console.WriteLine("Edição de Equipamentos");
+		Console.Write("Digite o id do registro que deseja selecionar: ");
+		int idSelecionado = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine();
+		Console.WriteLine();
 
-        VisualizarRegistros(false);
+		Equipamento equipamentoAtualizado = ObterDados();
 
-        Console.Write("Digite o id do registro que deseja selecionar: ");
-        int idSelecionado = Convert.ToInt32(Console.ReadLine());
+		bool conseguiuEditar = repositorioEquipamento.EditarRegistro(idSelecionado, equipamentoAtualizado);
 
-        Console.WriteLine();
+		if (!conseguiuEditar)
+		{
+			Console.WriteLine("Não foi possível encontrar o registro selecionado.");
+			Console.ReadLine();
 
-        Equipamento equipamentoAtualizado = ObterDados();
+			return;
+		}
 
-        bool conseguiuEditar = repositorioEquipamento.EditarEquipamento(idSelecionado, equipamentoAtualizado);
+		Console.WriteLine($"\nEquipamento \"{equipamentoAtualizado.nome}\" editado com sucesso!");
+		Console.ReadLine();
+	}
 
-        if (!conseguiuEditar)
-        {
-            Console.WriteLine("Não foi possível encontrar o registro selecionado.");
-            Console.ReadLine();
+	public void ExcluirRegistro()
+	{
+		ExibirCabecalho();
 
-            return;
-        }
+		Console.WriteLine("Exclusão de Equipamentos");
 
-        Console.WriteLine($"\nEquipamento \"{equipamentoAtualizado.nome}\" editado com sucesso!");
-        Console.ReadLine();
-    }
+		Console.WriteLine();
 
-    public void ExcluirRegistro()
-    {
-        ExibirCabecalho();
+		VisualizarRegistros(false);
 
-        Console.WriteLine("Exclusão de Equipamentos");
+		Console.Write("Digite o id do registro que deseja selecionar: ");
+		int idSelecionado = Convert.ToInt32(Console.ReadLine());
 
-        Console.WriteLine();
+		Console.WriteLine();
 
-        VisualizarRegistros(false);
+		bool conseguiuExcluir = repositorioEquipamento.ExcluirRegistro(idSelecionado);
 
-        Console.Write("Digite o id do registro que deseja selecionar: ");
-        int idSelecionado = Convert.ToInt32(Console.ReadLine());
+		if (!conseguiuExcluir)
+		{
+			Console.WriteLine("Não foi possível encontrar o registro selecionado.");
+			Console.ReadLine();
 
-        Console.WriteLine();
+			return;
+		}
 
-        bool conseguiuExcluir = repositorioEquipamento.ExcluirEquipamento(idSelecionado);
+		Console.WriteLine($"\nEquipamento excluído com sucesso!");
+		Console.ReadLine();
+	}
 
-        if (!conseguiuExcluir)
-        {
-            Console.WriteLine("Não foi possível encontrar o registro selecionado.");
-            Console.ReadLine();
+	public void VisualizarRegistros(bool exibirCabecalho)
+	{
+		if (exibirCabecalho == true)
+			ExibirCabecalho();
 
-            return;
-        }
+		Console.WriteLine("Visualização de Equipamentos");
 
-        Console.WriteLine($"\nEquipamento excluído com sucesso!");
-        Console.ReadLine();
-    }
+		Console.WriteLine();
 
-    public void VisualizarRegistros(bool exibirCabecalho)
-    {
-        if (exibirCabecalho == true)
-            ExibirCabecalho();
+		Console.WriteLine(
+			"{0, -10} | {1, -20} | {2, -15} | {3, -15} | {4, -20} | {5, -15}",
+			"Id", "Nome", "Preço Aquisição", "Número Série", "Fabricante", "Data Fabricação"
+		);
 
-        Console.WriteLine("Visualização de Equipamentos");
+		EntidadeBase[] equipamentos = repositorioEquipamento.SelecionarRegistros();
 
-        Console.WriteLine();
+		for (int i = 0; i < equipamentos.Length; i++)
+		{
+			Equipamento e = (Equipamento)equipamentos[i];
 
-        Console.WriteLine(
-            "{0, -10} | {1, -20} | {2, -15} | {3, -15} | {4, -20} | {5, -15}",
-            "Id", "Nome", "Preço Aquisição", "Número Série", "Fabricante", "Data Fabricação"
-        );
+			if (e == null)
+				continue;
 
-        Equipamento[] equipamentos = repositorioEquipamento.SelecionarEquipamentos();
+			Console.WriteLine(
+				"{0, -10} | {1, -20} | {2, -15} | {3, -15} | {4, -20} | {5, -15}",
+				e.id, e.nome, e.precoAquisicao.ToString("C2"), e.numeroSerie, e.fabricante.nome, e.dataFabricacao.ToShortDateString()
+			);
+		}
 
-        for (int i = 0; i < equipamentos.Length; i++)
-        {
-            Equipamento e = equipamentos[i];
+		Console.ReadLine();
+	}
 
-            if (e == null)
-                continue;
+	public void VisualizarFabricantes()
+	{
+		Console.WriteLine();
 
-            Console.WriteLine(
-                "{0, -10} | {1, -20} | {2, -15} | {3, -15} | {4, -20} | {5, -15}",
-                e.id, e.nome, e.precoAquisicao.ToString("C2"), e.numeroSerie, e.fabricante.nome, e.dataFabricacao.ToShortDateString()
-            );
-        }
+		Console.WriteLine("Visualização de Fabricantes");
 
-        Console.ReadLine();
-    }
+		Console.WriteLine();
 
-    public void VisualizarFabricantes()
-    {
-        Console.WriteLine();
+		Console.WriteLine(
+			"{0, -10} | {1, -20} | {2, -30} | {3, -15}",
+			"Id", "Nome", "Email", "Telefone"
+		);
 
-        Console.WriteLine("Visualização de Fabricantes");
+		EntidadeBase[] fabricantes = repositorioFabricante.SelecionarRegistros();
 
-        Console.WriteLine();
+		for (int i = 0; i < fabricantes.Length; i++)
+		{
+			Fabricante f = (Fabricante)fabricantes[i];
 
-        Console.WriteLine(
-            "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-            "Id", "Nome", "Email", "Telefone"
-        );
+			if (f == null)
+				continue;
 
-        Fabricante[] fabricantes = repositorioFabricante.SelecionarFabricantes();
+			Console.WriteLine(
+			   "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
+				f.id, f.nome, f.email, f.telefone
+			);
+		}
 
-        for (int i = 0; i < fabricantes.Length; i++)
-        {
-            Fabricante f = fabricantes[i];
+		Console.ReadLine();
+	}
 
-            if (f == null)
-                continue;
+	public Equipamento ObterDados()
+	{
+		Console.Write("Digite o nome do equipamento: ");
+		string nome = Console.ReadLine();
 
-            Console.WriteLine(
-               "{0, -10} | {1, -20} | {2, -30} | {3, -15}",
-                f.id, f.nome, f.email, f.telefone
-            );
-        }
+		Console.Write("Digite o preço de aquisição do equipamento: ");
+		decimal precoAquisicao = Convert.ToDecimal(Console.ReadLine());
 
-        Console.ReadLine();
-    }
+		Console.Write("Digite o número de série do equipamento: ");
+		string numeroSerie = Console.ReadLine();
 
-    public Equipamento ObterDados()
-    {
-        Console.Write("Digite o nome do equipamento: ");
-        string nome = Console.ReadLine();
+		Console.Write("Digite a data de fabricação do equipamento: ");
+		DateTime dataFabricacao = DateTime.Parse(Console.ReadLine());
 
-        Console.Write("Digite o preço de aquisição do equipamento: ");
-        decimal precoAquisicao = Convert.ToDecimal(Console.ReadLine());
+		VisualizarFabricantes();
 
-        Console.Write("Digite o número de série do equipamento: ");
-        string numeroSerie = Console.ReadLine();
+		Console.Write("Digite o id do fabricante do equipamento: ");
+		int idFabricante = Convert.ToInt32(Console.ReadLine());
 
-        Console.Write("Digite a data de fabricação do equipamento: ");
-        DateTime dataFabricacao = DateTime.Parse(Console.ReadLine());
+		Fabricante fabricanteSelecionado = (Fabricante)repositorioFabricante.SelecionarRegistroPorId(idFabricante);
 
-        VisualizarFabricantes();
+		Equipamento equipamento = new Equipamento();
+		equipamento.nome = nome;
+		equipamento.precoAquisicao = precoAquisicao;
+		equipamento.numeroSerie = numeroSerie;
+		equipamento.fabricante = fabricanteSelecionado;
+		equipamento.dataFabricacao = dataFabricacao;
 
-        Console.Write("Digite o id do fabricante do equipamento: ");
-        int idFabricante = Convert.ToInt32(Console.ReadLine());
-
-        Fabricante fabricanteSelecionado = repositorioFabricante.SelecionarFabricantePorId(idFabricante);
-
-        Equipamento equipamento = new Equipamento();
-        equipamento.nome = nome;
-        equipamento.precoAquisicao = precoAquisicao;
-        equipamento.numeroSerie = numeroSerie;
-        equipamento.fabricante = fabricanteSelecionado;
-        equipamento.dataFabricacao = dataFabricacao;
-
-        return equipamento;
-    }
+		return equipamento;
+	}
 }
